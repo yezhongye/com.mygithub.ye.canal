@@ -25,8 +25,9 @@ public class CanalClientSample {
             connector.connect();
             connector.subscribe(".*\\..*");
             connector.rollback();
-            int totalEmtryCount = 1200;
-            while (emptyCount < totalEmtryCount) {
+            int totalEmtryCount = 120;
+//            while (emptyCount < totalEmtryCount) {
+            while (true) {
                 Message message = connector.getWithoutAck(batchSize); // 获取指定数量的数据
                 long batchId = message.getId();
                 int size = message.getEntries().size();
@@ -40,7 +41,7 @@ public class CanalClientSample {
                     }
                 } else {
                     emptyCount = 0;
-                    // System.out.printf("message[batchId=%s,size=%s] \n", batchId, size);
+                    System.out.printf("message[batchId=%s,size=%s] \n", batchId, size);
                     printEntry(message.getEntries());
                 }
 
@@ -48,7 +49,7 @@ public class CanalClientSample {
                 // connector.rollback(batchId); // 处理失败, 回滚数据
             }
 
-            System.out.println("empty too many times, exit");
+//            System.out.println("empty too many times, exit");
         } finally {
             connector.disconnect();
         }
@@ -57,6 +58,7 @@ public class CanalClientSample {
     private static void printEntry( List<CanalEntry.Entry> entrys) {
         for (CanalEntry.Entry entry : entrys) {
             if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
+                System.out.println("================> TRANSACTION BEGIN OR EDN");
                 continue;
             }
 
@@ -86,19 +88,19 @@ public class CanalClientSample {
                     printColumn(rowData.getAfterColumnsList());
                 }
                 //=====================
-                if (eventType == CanalEntry.EventType.DELETE) {
-                    System.out.println("redis del-------> before");
-                    redisDelete(rowData.getAfterColumnsList());
-                    System.out.println("redis del-------> after");
-                } else if (eventType == CanalEntry.EventType.INSERT) {
-                    System.out.println("redis insert-------> before");
-                    redisInsert(rowData.getAfterColumnsList());
-                    System.out.println("redis insert-------> after");
-                } else {
-                    System.out.println("redis update-------> before");
-                    redisUpdate(rowData.getAfterColumnsList());
-                    System.out.println("redis update-------> after");
-                }
+//                if (eventType == CanalEntry.EventType.DELETE) {
+//                    System.out.println("redis del-------> before");
+//                    redisDelete(rowData.getAfterColumnsList());
+//                    System.out.println("redis del-------> after");
+//                } else if (eventType == CanalEntry.EventType.INSERT) {
+//                    System.out.println("redis insert-------> before");
+//                    redisInsert(rowData.getAfterColumnsList());
+//                    System.out.println("redis insert-------> after");
+//                } else {
+//                    System.out.println("redis update-------> before");
+//                    redisUpdate(rowData.getAfterColumnsList());
+//                    System.out.println("redis update-------> after");
+//                }
             }
         }
     }

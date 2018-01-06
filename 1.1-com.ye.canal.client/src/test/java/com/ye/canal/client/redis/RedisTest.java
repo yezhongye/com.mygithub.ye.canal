@@ -15,7 +15,7 @@ public class RedisTest {
 
     @Test
     public void getRedisData(){
-        String res = RedisUtils.stringGet("test:3");
+        String res = RedisUtils.stringGet("Too");
         System.out.println("结果："+res);
     }
 }
